@@ -1,0 +1,5 @@
+C:\inetpub\wwwroot\DNN\bin\CMI_News.dll
+C:\inetpub\wwwroot\DNN\bin\CMI_News.pdb
+C:\inetpub\wwwroot\DNN\DesktopModules\CMI_News\obj\Release\CMI_News.dll
+C:\inetpub\wwwroot\DNN\DesktopModules\CMI_News\obj\Release\CMI_News.pdb
+C:\inetpub\wwwroot\DNN\DesktopModules\CMI_News\obj\Release\CMI_News.csprojResolveAssemblyReference.cache

@@ -1,0 +1,126 @@
+// 
+// DotNetNuke?- http://www.dotnetnuke.com 
+// Copyright (c) 2002-2018 
+// by DotNetNuke Corporation 
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and 
+// to permit persons to whom the Software is furnished to do so, subject to the following conditions: 
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software. 
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE. 
+// 
+
+using System;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+
+using DotNetNuke;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Security;
+using DotNetNuke.Services.Exceptions;
+using DotNetNuke.Services.Localization;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules.Actions;
+using DotNetNuke.Entities.Users;
+using DotNetNuke.Entities.Controllers;
+
+namespace CMI_News
+{
+
+    /// ----------------------------------------------------------------------------- 
+    /// <summary> 
+    /// The ViewCMI_News class displays the content 
+    /// </summary> 
+    /// <remarks> 
+    /// </remarks> 
+    /// <history> 
+    /// </history> 
+    /// ----------------------------------------------------------------------------- 
+    partial class TableView : BaseNewsUserControl
+    {
+
+        #region "Event Handlers"
+
+        /// ----------------------------------------------------------------------------- 
+        /// <summary> 
+        /// Page_Load runs when the control is loaded 
+        /// </summary> 
+        /// ----------------------------------------------------------------------------- 
+        protected void Page_Load(object sender, System.EventArgs e)
+        {
+            try
+            {
+                CMI_NewsController objNews = new CMI_NewsController();
+
+                List<CMI_NewsInfo> news = objNews.GetCMI_NewssPrev();
+                gvNews.DataSource = news;
+                gvNews.DataBind();
+                ModuleController objModules = new ModuleController();
+                if (UserController.Instance.GetCurrentUserInfo().IsInRole("Subscribers"))
+                {
+                    pnlSubscribe.Visible = false;
+                    hplSearch.Visible = true;
+
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINewsNewsSearchTitle"].ToString()))
+                        hplSearch.Text = objModules.GetModuleSettings(ModuleId)["CMINewsNewsSearchTitle"].ToString();
+
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINewsNewsSearchLink"].ToString()))
+                        hplSearch.NavigateUrl = objModules.GetModuleSettings(ModuleId)["CMINewsNewsSearchLink"].ToString();
+                }
+                else
+                {
+                    pnlSubscribe.Visible = true;
+                    hplSearch.Visible = false;
+
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINewsSubscribeNowTitle"].ToString()))
+                        hplSubscribe.Text = objModules.GetModuleSettings(ModuleId)["CMINewsSubscribeNowTitle"].ToString();
+                    
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINewsSubscribeNowLink"].ToString()))
+                         hplSubscribe.NavigateUrl = objModules.GetModuleSettings(ModuleId)["CMINewsSubscribeNowLink"].ToString();
+
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINews7daysTrialTitle"].ToString()))
+                         hpl7dayTrial.Text = objModules.GetModuleSettings(ModuleId)["CMINews7daysTrialTitle"].ToString();
+
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINews7daysTrialLink"].ToString()))
+                        hpl7dayTrial.NavigateUrl = objModules.GetModuleSettings(ModuleId)["CMINews7daysTrialLink"].ToString();
+
+                    if (!String.IsNullOrEmpty(objModules.GetModuleSettings(ModuleId)["CMINewsTableViewInstruction"].ToString()))
+                        pInstruction.InnerHtml = objModules.GetModuleSettings(ModuleId)["CMINewsTableViewInstruction"].ToString();
+
+                    /*
+                    hplSubscribe.Text = HostController.Instance.GetString("CMINewsSubscribeNowTitle");
+                    hplSubscribe.NavigateUrl = HostController.Instance.GetString("CMINewsSubscribeNowLink");
+                    hpl7dayTrial.Text = HostController.Instance.GetString("CMINews7daysTrialTitle");
+                    hpl7dayTrial.NavigateUrl = HostController.Instance.GetString("CMINews7daysTrialLink");
+                     */
+                }
+
+            }
+
+            catch (Exception exc)
+            {
+                //Module failed to load 
+                Exceptions.ProcessModuleLoadException(this, exc);
+            }
+        }
+
+        #endregion
+
+        #region "Optional Interfaces"
+
+        #endregion
+
+    }
+
+}

@@ -1,0 +1,108 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetSearch]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetSearch
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetSearchNum]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetSearchNum
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetSearchNum
+	   @FilingDateFrom		varchar(10),
+	   @FilingDateTo		varchar(10),
+	   @MajorIndustryGroupIDs varchar(1024),
+	   @CIKCodes varchar(2048)
+as
+BEGIN
+	DECLARE @sql varchar(max)
+	DECLARE @sqlWhere varchar(max)
+			
+	Set @sql = ' select count(*) as num from vwCMI_News n '
+	Set @sqlWhere = ' where 1=1 '
+    
+	if len(@FilingDateFrom)>0
+	BEGIN
+	  Set @sqlWhere = @sqlWhere + ' and FilingDate >=''' + @FilingDateFrom + ''' '
+	END
+	
+	if len(@FilingDateTo)>0
+	BEGIN
+	  Set @sqlWhere = @sqlWhere + ' and FilingDate <=''' + @FilingDateTo + ''' '
+	END
+
+	if len(@MajorIndustryGroupIDs)>0
+	BEGIN
+		Set @sql = @sql + ' inner join {databaseOwner}{objectQualifier}CMI_String_To_Int_Table(''' + CAST(@MajorIndustryGroupIDs AS VARCHAR) + ''') g on n.MajorIndustryGroupID= g.value '
+	END
+	
+	if len(@CIKCodes)>0
+	BEGIN
+		Set @sql = @sql + ' inner join {databaseOwner}{objectQualifier}CMI_String_To_Int_Table(''' + CAST(@CIKCodes AS VARCHAR) + ''') c on n.CIKCode= c.value '
+	END
+
+	EXECUTE (@sql + @sqlWhere )
+
+END
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetSearch
+	   @Super int,
+   @UserId int,
+	   @FilingDateFrom		varchar(10),
+	   @FilingDateTo		varchar(10),
+	   @MajorIndustryGroupIDs varchar(1024),
+	   @CIKCodes varchar(2048)
+as
+BEGIN
+
+	DECLARE @sql varchar(max)
+	DECLARE @sqlWhere varchar(max)
+	DECLARE @numRow varchar(6)
+
+	set @numRow ={databaseOwner}{objectQualifier}CMI_GetHostSettingValue('CMINewsSearchShowNum')
+	exec {databaseOwner}{objectQualifier}CMI_NewsPreference_Add @UserId, @MajorIndustryGroupIDs, @CIKCodes;
+		
+	if @Super=1		
+		Set @sql = ' select n.* from vwCMI_News n '
+	else
+		Set @sql = ' select top ' +  @numRow + ' n.* from vwCMI_News n '
+
+	Set @sqlWhere = ' where 1=1 '
+    
+	if len(@FilingDateFrom)>0
+	BEGIN
+	  Set @sqlWhere = @sqlWhere + ' and FilingDate >=''' + @FilingDateFrom + ''' '
+	END
+	
+	if len(@FilingDateTo)>0
+	BEGIN
+	  Set @sqlWhere = @sqlWhere + ' and FilingDate <=''' + @FilingDateTo + ''' '
+	END
+
+	if len(@MajorIndustryGroupIDs)>0
+	BEGIN
+		Set @sql = @sql + ' inner join {databaseOwner}{objectQualifier}CMI_String_To_Int_Table(''' + CAST(@MajorIndustryGroupIDs AS VARCHAR) + ''') g on n.MajorIndustryGroupID= g.value '
+	END
+	
+	if len(@CIKCodes)>0
+	BEGIN
+		Set @sql = @sql + ' inner join {databaseOwner}{objectQualifier}CMI_String_To_Int_Table(''' + CAST(@CIKCodes AS VARCHAR) + ''') c on n.CIKCode= c.value '
+	END
+	
+	SET NOCOUNT ON
+
+
+	EXECUTE (@sql + @sqlWhere + ' order by FilingDate desc, CompanyName ')
+
+    SET NOCOUNT OFF
+END
+GO

@@ -1,0 +1,43 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+
+
+/** Drop Existing Stored Procedures **/
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetPrev]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetPrev
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetPrev
+as
+BEGIN
+	Declare @currentDate date;
+	DECLARE @numRow varchar(6);
+	DECLARE @numRowTop3 varchar(6);
+	DECLARE @sql varchar(1000);
+
+	set @numRow ={databaseOwner}{objectQualifier}CMI_GetHostSettingValue('CMINewsTableShowNum')
+	
+	set @numRowTop3 ={databaseOwner}{objectQualifier}CMI_GetHostSettingValue('CMINewsTop3ShowNum')
+	
+	select @currentDate= max(filingDate) from {databaseOwner}{objectQualifier}CMI_News where filingDate <= getdate();
+
+	Set @sql = ' select top ' +  @numRow + ' * from {databaseOwner}[{objectQualifier}vwCMI_News] where Featured<=''' + convert(varchar,@numRowTop3) + ''' and FilingDate <''' + convert(varchar,@currentDate) + ''' order by FilingDate desc, Featured ';
+
+	EXECUTE (@sql)
+/*
+
+	select top 30 *
+	from {databaseOwner}[{objectQualifier}vwCMI_News] 
+	where Featured<4 and FilingDate < @currentDate
+		order by FilingDate desc, Featured */
+END
+GO

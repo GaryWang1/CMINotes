@@ -1,0 +1,250 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+
+DROP function {databaseOwner}{objectQualifier}CMI_String_To_Int_Table
+
+DROP function {databaseOwner}{objectQualifier}CMI_GetHostSettingValueDate
+
+DROP function {databaseOwner}{objectQualifier}CMI_IsPublished
+
+drop procedure {databaseOwner}{objectQualifier}CMI_DoPublish
+
+drop procedure {databaseOwner}{objectQualifier}CMI_UnDoPublish
+
+drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetSearchNum
+
+/** Drop Existing Stored Procedures **/
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup_sGet]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsMajorIndustryGroup_sGet
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup_Get]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsMajorIndustryGroup_Get
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsMajorIndustryGroup_Add
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup_Update]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsMajorIndustryGroup_Update
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup_Delete]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsMajorIndustryGroup_Delete
+GO
+
+
+
+
+/** Drop Existing Stored Procedures **/
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsIndustry_sGet]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsIndustry_sGet
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsIndustry_sGetByGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsIndustry_sGetByGroup
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsIndustry_Get]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsIndustry_Get
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsIndustry_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsIndustry_Add
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsIndustry_Update]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsIndustry_Update
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsIndustry_Delete]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsIndustry_Delete
+GO
+
+/** Drop Existing Stored Procedures **/
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News2DigitIndustry_sGetByGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News2DigitIndustry_sGetByGroup
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News2DigitIndustry_Get]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News2DigitIndustry_Get
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News2DigitIndustry_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News2DigitIndustry_Add
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News2DigitIndustry_Update]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News2DigitIndustry_Update
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News2DigitIndustry_Delete]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News2DigitIndustry_Delete
+GO
+
+
+/** Drop Existing Stored Procedures **/
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_sGet]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_sGet
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_sGetWithNum]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_sGetWithNum
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_sGetSortbyName]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_sGetSortbyName
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_Get]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_Get
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_Add
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_Update]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_Update
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsCompany_Delete]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsCompany_Delete
+GO
+/** Drop Existing Stored Procedures **/
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGet]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGet
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_Get]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_Get
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_Add
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_Update]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_Update
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_Delete]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_Delete
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetTop3]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetTop3
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetLatest]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetLatest
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetPrev]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetPrev
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetSearch]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetSearch
+GO
+
+
+DROP VIEW {databaseOwner}{objectQualifier}vwCMI_News
+GO
+DROP function {databaseOwner}{objectQualifier}CMI_News_GetNumCompany
+GO
+DROP function {databaseOwner}{objectQualifier}CMI_News_GetNumIndustry
+GO
+DROP function {databaseOwner}{objectQualifier}CMI_News_GetNumMajorIndustryGroup
+GO
+drop procedure {databaseOwner}{objectQualifier}CMI_NewsPreference_Add
+GO
+drop procedure {databaseOwner}{objectQualifier}CMI_NewsPreferenceCompany_sGet
+GO
+drop procedure {databaseOwner}{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup_sGet
+GO
+DROP function {databaseOwner}{objectQualifier}CMI_StringTo_Table
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsUserDownload_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsUserDownload_Add
+GO
+
+IF OBJECT_ID('{databaseOwner}[{objectQualifier}CMI_NewsUserDownload_GetNum]') IS NOT NULL
+	DROP function {databaseOwner}{objectQualifier}CMI_NewsUserDownload_GetNum
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_News] Drop CONSTRAINT [PK_{objectQualifier}CMI_News]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_News]  Drop CONSTRAINT [FK_{objectQualifier}CMI_News_NewsIndustry] 
+Go
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_News]  Drop CONSTRAINT [FK_{objectQualifier}CMI_News_NewsCompany] 
+Go
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_News]
+GO
+
+
+
+
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup] Drop CONSTRAINT [PK_{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup] 
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup]  Drop CONSTRAINT [FK_{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup_Users] 
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup]  Drop CONSTRAINT [FK_{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup_NewsMajorIndustryGroup] 
+GO
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceMajorIndustryGroup]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceCompany] Drop CONSTRAINT [PK_{objectQualifier}CMI_NewsPreferenceCompany] 
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceCompany]  Drop CONSTRAINT [FK_{objectQualifier}CMI_NewsPreferenceCompany_Users] 
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceCompany]  Drop CONSTRAINT [FK_{objectQualifier}CMI_NewsPreferenceCompany_NewsCompany] 
+GO
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_NewsPreferenceCompany]	
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsIndustry]  Drop CONSTRAINT [FK_{objectQualifier}CMI_NewsIndustry_NewsMajorIndustryGroup] 
+Go
+Alter TABLE {databaseOwner}[{objectQualifier}CMI_NewsIndustry] Drop CONSTRAINT [PK_{objectQualifier}CMI_NewsIndustry]
+GO
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_NewsIndustry]
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_News2DigitIndustry]  Drop CONSTRAINT [FK_{objectQualifier}CMI_News2DigitIndustry_NewsMajorIndustryGroup] 
+Go
+Alter TABLE {databaseOwner}[{objectQualifier}CMI_News2DigitIndustry] Drop CONSTRAINT [PK_{objectQualifier}CMI_News2DigitIndustry]
+GO
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_News2DigitIndustry]
+GO
+
+Drop Table {databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup]
+GO
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_NewsCompany]
+GO
+
+
+ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsUserDownload]  Drop CONSTRAINT [FK_{objectQualifier}CMI_NewsUserDownload_Users] 
+Go
+Alter TABLE {databaseOwner}[{objectQualifier}CMI_NewsUserDownload] Drop CONSTRAINT [PK_{objectQualifier}CMI_NewsUserDownload]
+GO
+Drop TABLE {databaseOwner}[{objectQualifier}CMI_NewsUserDownload]
+

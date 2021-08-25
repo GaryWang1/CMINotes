@@ -1,0 +1,13 @@
+C:\inetpub\wwwroot\DNN\bin\CMI_News.xml
+C:\inetpub\wwwroot\DNN\bin\CMI_News.dll
+C:\inetpub\wwwroot\DNN\bin\CMI_News.pdb
+C:\inetpub\wwwroot\DNN\DesktopModules\CMI_News\obj\Debug\CMI_News.dll
+C:\inetpub\wwwroot\DNN\DesktopModules\CMI_News\obj\Debug\CMI_News.pdb
+C:\inetpub\wwwroot\DNN\DesktopModules\CMI_News\obj\Debug\CMI_News.csprojResolveAssemblyReference.cache
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\bin\CMI_News.xml
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\bin\CMI_News.dll
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\bin\CMI_News.pdb
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\DesktopModules\CMI_News\obj\Debug\CMI_News.csprojResolveAssemblyReference.cache
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\DesktopModules\CMI_News\obj\Debug\CMI_News.csproj.CoreCompileInputs.cache
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\DesktopModules\CMI_News\obj\Debug\CMI_News.dll
+C:\Users\garyw\Desktop\DNN_Platform_8.0.4\DesktopModules\CMI_News\obj\Debug\CMI_News.pdb

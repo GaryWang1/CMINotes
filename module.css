@@ -1,0 +1,42 @@
+﻿.CMILabel {
+    float: left;
+    width: 180px;
+    font-weight: bold;
+    color: #000;
+    padding-left: 8px;
+    padding-bottom: 8px;
+}
+
+.CMIText {
+    padding-bottom: 8px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    position: absolute;
+    right: .30em !important;
+    top: 20% !important;
+}
+
+.hasDatepicker {
+    position: relative;
+    z-index: 9;
+}
+/*.ui-dialog-titlebar-close {
+            visibility: hidden;
+        }*/
+.dropdown-display-label:after, .dropdown-display:after {
+    display: none;
+}
+
+.dropdown-selected {
+    display: block !important;
+    border: none !important;
+}
+.moduleborder {
+    border-style: solid;
+    border-width: thin;
+    border-color: darkgray;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}

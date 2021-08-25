@@ -1,0 +1,61 @@
+<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="CMI_News_Subscribe" type="Module" version="01.00.00">
+      <friendlyName>CMI_News_Subscribe</friendlyName>
+      <description>CMI_News_Subscribe module description</description>
+      <owner>
+        <name>CUFT Analytics</name>
+        <organization>CMI notes</organization>
+        <url>http://www.cuftanalytics.com</url>
+        <email>inquiry@cuftanalytics.com</email>
+      </owner>
+      <components>
+        <component type="Module">
+          <desktopModule>
+            <moduleName>CMI_News_Subscribe</moduleName>
+            <foldername>CMI_News</foldername>
+            <businessControllerClass>CMI_News.CMI_NewsController,CMI_News</businessControllerClass>
+            <moduleDefinitions>
+              <moduleDefinition>
+                <friendlyName>CMI_News_Subscribe</friendlyName>
+                <defaultCacheTime>-1</defaultCacheTime>
+                <moduleControls>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DesktopModules/CMI_News/Subscribe.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>CMI_News_Subscribe</controlTitle>
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl></helpUrl>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey >Edit</controlKey>
+                    <controlSrc>DesktopModules/CMI_News/EditSubscriber.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl></helpUrl>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>SubscribeSettings</controlKey>
+                    <controlSrc>DesktopModules/CMI_News/SubscribeSettings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Subscribe Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl></helpUrl>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                </moduleControls>
+              </moduleDefinition>
+            </moduleDefinitions> 
+          </desktopModule>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>

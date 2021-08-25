@@ -1,0 +1,745 @@
+ALTER TABLE {databaseOwner}{objectQualifier}CMI_News ADD IsStock INT NOT NULL DEFAULT 0; 
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_Add]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_Add
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_Add
+
+	@AcceptanceDate date,
+	@FilingDate date,
+	@CIKCode bigint,
+	@SICCode int,
+	@IsLoan int,
+	@IsBond int,
+	@IsStock int,
+	@NewMoneyLoan money ,
+	@NewMoneyBondNotes money ,
+	@ProposedLoan money ,
+	@ProposedBondNotes money ,
+	@Closed int,
+	@ActualCurrency varchar(128),
+	@k8FormDescription varchar(max),
+	@DocumentIncluded int,
+	@FilingHyperlink varchar(256),
+	@HeadlineDescription varchar(1024),
+	@K8FormHyperlink varchar(256),
+	@Featured int, 
+	@CompanyName varchar(256),
+	@Industry varchar(256),
+	@ImageID bigint,
+	@MajorIndustryGroupID int,
+	@FilingForm varchar(128),
+	@MajorIndustryGroup varchar(256)
+as
+BEGIN
+
+exec {databaseOwner}{objectQualifier}CMI_NewsCompany_Update @CIKCode, @CompanyName;
+
+exec {databaseOwner}{objectQualifier}CMI_NewsIndustry_Update @MajorIndustryGroupID, @Industry, @SICCode, @MajorIndustryGroup;
+
+insert into {databaseOwner}{objectQualifier}CMI_News (
+	AcceptanceDate,
+	FilingDate,
+	CIKCode,
+	SICCode,
+	IsLoan,
+	IsBond,
+	IsStock,
+	NewMoneyLoan,
+	NewMoneyBondNotes,
+	ProposedLoan,
+	ProposedBondNotes,
+	Closed,
+	ActualCurrency,
+	k8FormDescription,
+	DocumentIncluded,
+	FilingHyperlink,
+	HeadlineDescription,
+	K8FormHyperlink,
+	Featured,
+	ImageID,
+	FilingForm 
+) 
+values (
+	@AcceptanceDate,
+	@FilingDate,
+	@CIKCode,
+	@SICCode,
+	@IsLoan,
+	@IsBond,
+	@IsStock,
+	@NewMoneyLoan,
+	@NewMoneyBondNotes,
+	@ProposedLoan,
+	@ProposedBondNotes,
+	@Closed,
+	@ActualCurrency,
+	@k8FormDescription,
+	@DocumentIncluded,
+	@FilingHyperlink,
+	@HeadlineDescription,
+	@K8FormHyperlink,
+	@Featured,
+	@ImageID,
+	@FilingForm 
+)
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_Update]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_Update
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_Update
+
+	@NewsID int,
+	@AcceptanceDate date,
+	@FilingDate date,
+	@CIKCode bigint,
+	@SICCode int,
+	@IsLoan int,
+	@IsBond int,
+	@IsStock int,
+	@NewMoneyLoan money ,
+	@NewMoneyBondNotes money ,
+	@ProposedLoan money ,
+	@ProposedBondNotes money ,
+	@Closed int,
+	@ActualCurrency varchar(128),
+	@k8FormDescription varchar(max),
+	@DocumentIncluded int,
+	@FilingHyperlink varchar(256),
+	@HeadlineDescription varchar(1024),
+	@K8FormHyperlink varchar(256),
+	@Featured int, 
+	@CompanyName varchar(256),
+	@ImageID bigint,
+	@FilingForm varchar(128)
+
+as
+BEGIN
+
+exec {databaseOwner}{objectQualifier}CMI_NewsCompany_Update @CIKCode,@CompanyName;
+
+update {databaseOwner}{objectQualifier}CMI_News
+set		AcceptanceDate		= @AcceptanceDate,
+		FilingDate			= @FilingDate,
+		CIKCode		= @CIKCode,
+		SICCode		= @SICCode,
+		IsLoan		= @IsLoan,
+		IsBond		= @IsBond,
+		IsStock		= @IsStock,
+		NewMoneyLoan		= @NewMoneyLoan,
+		NewMoneyBondNotes	= @NewMoneyBondNotes,
+		ProposedLoan		= @ProposedLoan,
+		ProposedBondNotes	= @ProposedBondNotes,
+		Closed			= @Closed,
+		ActualCurrency	= @ActualCurrency,
+		k8FormDescription	= @k8FormDescription,
+		DocumentIncluded			= @DocumentIncluded,
+		FilingHyperlink		= @FilingHyperlink,
+		HeadlineDescription		= @HeadlineDescription,
+		K8FormHyperlink		= @K8FormHyperlink,
+		Featured		= @Featured,
+		ImageID		= @ImageID,
+		FilingForm		= @FilingForm
+where  NewsID = @NewsID
+
+END
+GO
+
+
+DROP VIEW {databaseOwner}{objectQualifier}vwCMI_News;
+
+Go
+
+CREATE VIEW {databaseOwner}{objectQualifier}vwCMI_News
+AS
+		
+			Select n.*, c.CompanyName, i.Industry, g.MajorIndustryGroup, g.MajorIndustryGroupId, g.BannerImage
+			from {databaseOwner}[{objectQualifier}CMI_News] n
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsCompany] c on n.CIKCode=c.CIKCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsIndustry] i on n.SICCode=i.SICCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup] g on i.MajorIndustryGroupID=g.MajorIndustryGroupID
+
+Go
+
+
+IF OBJECT_ID(N'{databaseOwner}[{objectQualifier}vwCMI_NewsAllTypes]', 'V') IS NOT NULL
+    DROP VIEW {databaseOwner}{objectQualifier}vwCMI_NewsAllTypes
+GO
+
+CREATE VIEW {databaseOwner}{objectQualifier}vwCMI_NewsAllTypes
+AS
+		
+			Select n.*, c.CompanyName, i.Industry, g.MajorIndustryGroup, g.MajorIndustryGroupId, g.BannerImage, 'B' As Fillingtype
+			from {databaseOwner}[{objectQualifier}CMI_News] n
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsCompany] c on n.CIKCode=c.CIKCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsIndustry] i on n.SICCode=i.SICCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup] g on i.MajorIndustryGroupID=g.MajorIndustryGroupID
+			where n.IsBond =1
+			Union
+			Select n.*, c.CompanyName, i.Industry, g.MajorIndustryGroup, g.MajorIndustryGroupId, g.BannerImage, 'L' As Fillingtype
+			from {databaseOwner}[{objectQualifier}CMI_News] n
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsCompany] c on n.CIKCode=c.CIKCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsIndustry] i on n.SICCode=i.SICCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup] g on i.MajorIndustryGroupID=g.MajorIndustryGroupID
+			where n.IsLoan =1
+			Union
+			Select n.*, c.CompanyName, i.Industry, g.MajorIndustryGroup, g.MajorIndustryGroupId, g.BannerImage, 'P' As Fillingtype
+			from {databaseOwner}[{objectQualifier}CMI_News] n
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsCompany] c on n.CIKCode=c.CIKCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsIndustry] i on n.SICCode=i.SICCode
+			inner join {databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup] g on i.MajorIndustryGroupID=g.MajorIndustryGroupID
+			where n.IsStock =1
+Go
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsFollowCompany]') and OBJECTPROPERTY(id, N'IsTable') = 1)
+	BEGIN
+		CREATE TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowCompany]
+		(
+			[UserID] int NOT NULL,
+			[CIKCode] bigint NOT NULL
+		)
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowCompany] ADD CONSTRAINT [PK_{objectQualifier}CMI_NewsFollowCompany] PRIMARY KEY CLUSTERED  ([UserID], [CIKCode])
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowCompany]  WITH CHECK ADD CONSTRAINT [FK_{objectQualifier}CMI_NewsFollowCompany_Users] FOREIGN KEY([UserID])
+		REFERENCES {databaseOwner}[{objectQualifier}Users] ([UserID])
+		ON DELETE CASCADE
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowCompany]  WITH CHECK ADD CONSTRAINT [FK_{objectQualifier}CMI_NewsFollowCompany_NewsCompany] FOREIGN KEY([CIKCode])
+		REFERENCES {databaseOwner}[{objectQualifier}CMI_NewsCompany] ([CIKCode])
+		ON DELETE CASCADE
+	END
+
+Go
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsFollowMajorIndustryGroup]') and OBJECTPROPERTY(id, N'IsTable') = 1)
+	BEGIN
+		CREATE TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowMajorIndustryGroup]
+		(
+			[UserID] int NOT NULL,
+			[MajorIndustryGroupID] int NOT NULL
+		)
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowMajorIndustryGroup] ADD CONSTRAINT [PK_{objectQualifier}CMI_NewsFollowMajorIndustryGroup] PRIMARY KEY CLUSTERED  ([UserID], [MajorIndustryGroupID])
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowMajorIndustryGroup]  WITH CHECK ADD CONSTRAINT [FK_{objectQualifier}CMI_NewsFollowMajorIndustryGroup_Users] FOREIGN KEY([UserID])
+		REFERENCES {databaseOwner}[{objectQualifier}Users] ([UserID])
+		ON DELETE CASCADE
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowMajorIndustryGroup]  WITH CHECK ADD CONSTRAINT [FK_{objectQualifier}CMI_NewsFollowMajorIndustryGroup_NewsMajorIndustryGroup] FOREIGN KEY([MajorIndustryGroupID])
+		REFERENCES {databaseOwner}[{objectQualifier}CMI_NewsMajorIndustryGroup] ([MajorIndustryGroupID])
+		ON DELETE CASCADE
+	END
+
+Go
+
+
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsFollowed]') and OBJECTPROPERTY(id, N'IsTable') = 1)
+	BEGIN
+		CREATE TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowed]
+		(
+			[UserID] int NOT NULL,
+			[NewsID] int NOT NULL,
+			Status int NOT NULL DEFAULT 0
+		)
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowed] ADD CONSTRAINT [PK_{objectQualifier}CMI_NewsFollowed] PRIMARY KEY CLUSTERED  ([UserID], [NewsID])
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowed]  WITH CHECK ADD CONSTRAINT [FK_{objectQualifier}CMI_CMI_NewsFollowed_Users] FOREIGN KEY([UserID])
+		REFERENCES {databaseOwner}[{objectQualifier}Users] ([UserID])
+		ON DELETE CASCADE
+
+		ALTER TABLE {databaseOwner}[{objectQualifier}CMI_NewsFollowed]  WITH CHECK ADD CONSTRAINT [FK_{objectQualifier}CMI_CMI_NewsFollowed_News] FOREIGN KEY([NewsID])
+		REFERENCES {databaseOwner}[{objectQualifier}CMI_News] ([NewsID])
+		ON DELETE CASCADE
+	END
+
+Go
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_PushToAllFollower]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_PushToAllFollower
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_PushToAllFollower
+
+	@NewsID			int
+
+as
+BEGIN
+	DECLARE @UserID INT;
+	DECLARE @userCursor as CURSOR;
+	DECLARE @userCursor2 as CURSOR;
+	
+	SET @userCursor = CURSOR FOR
+	SELECT UserID
+	FROM {databaseOwner}{objectQualifier}CMI_NewsFollowCompany f inner join {databaseOwner}{objectQualifier}CMI_News c
+	on f.CIKCode =c.CIKCode
+	where NewsID =@NewsID;
+	
+	OPEN @userCursor;
+	
+	FETCH NEXT FROM @userCursor INTO @UserID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+	 INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowed (UserID, NewsID)
+		SELECT @UserID, @NewsID
+		EXCEPT
+		SELECT UserID, NewsID from {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	 
+	 FETCH NEXT FROM @userCursor INTO @UserID;
+	END
+
+	CLOSE @userCursor;
+	
+	DEALLOCATE @userCursor;
+	
+	SET @userCursor2 = CURSOR FOR
+	SELECT UserID
+	FROM {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup f inner join {databaseOwner}{objectQualifier}CMI_NewsIndustry i
+	on f.MajorIndustryGroupID = i.MajorIndustryGroupID
+	inner join {databaseOwner}{objectQualifier}CMI_News c
+	on i.SICcode =c.SICcode
+	where NewsID =@NewsID;
+	
+	OPEN @userCursor2;
+	
+	FETCH NEXT FROM @userCursor2 INTO @UserID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+	 INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowed (UserID, NewsID)
+		SELECT @UserID, @NewsID
+		EXCEPT
+		SELECT UserID, NewsID from {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	 
+	 FETCH NEXT FROM @userCursor2 INTO @UserID;
+	END
+
+	CLOSE @userCursor2;
+
+	DEALLOCATE @userCursor2;
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_PushAll]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_PushAll
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_PushAll
+
+as
+BEGIN
+	DECLARE @NewsID INT;
+	DECLARE @newsCursor as CURSOR;
+	
+	SET @newsCursor = CURSOR FOR
+	SELECT NewsID
+	FROM {databaseOwner}{objectQualifier}CMI_News;
+	
+	OPEN @newsCursor;
+	
+	FETCH NEXT FROM @newsCursor INTO @NewsID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+		exec {databaseOwner}{objectQualifier}CMI_News_PushToAllFollower @NewsID;
+	 
+		FETCH NEXT FROM @newsCursor INTO @NewsID;
+	END
+
+	CLOSE @newsCursor;
+	
+	DEALLOCATE @newsCursor;
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_PushLatest]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_PushLatest
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_PushLatest
+@NumLastest int
+as
+BEGIN
+	DECLARE @NewsID INT;
+	DECLARE @sql varchar(max);
+	DECLARE @newsCursor as CURSOR;
+	
+	Set @sql = N'SET @newsCursor = CURSOR FAST_FORWARD FOR '
+	Set @sql = @sql + N'SELECT top '+@NumLastest +' NewsID '
+	Set @sql = @sql +N'FROM {databaseOwner}{objectQualifier}CMI_News order by NewID desc;'
+    Set @sql = @sql +N'OPEN @newsCursor;'
+	EXECUTE SP_EXECUTESQL
+        @sql,
+        @newsCursor = @newsCursor OUTPUT
+
+	FETCH NEXT FROM @newsCursor INTO @NewsID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+		exec {databaseOwner}{objectQualifier}CMI_News_PushToAllFollower @NewsID;
+	 
+		FETCH NEXT FROM @newsCursor INTO @NewsID;
+	END
+
+	CLOSE @newsCursor;
+	
+	DEALLOCATE @newsCursor;
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserPull]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserPull
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserPull
+	   @UserID int
+as
+BEGIN
+	DECLARE @NewsID INT;
+	DECLARE @newsCursor as CURSOR;
+	DECLARE @newsCursor2 as CURSOR;
+
+	SET @newsCursor = CURSOR FOR
+	SELECT NewsID
+	FROM {databaseOwner}{objectQualifier}CMI_NewsFollowCompany f inner join {databaseOwner}{objectQualifier}CMI_News c
+	on f.CIKCode =c.CIKCode
+	where UserID =@UserID;
+	
+	OPEN @newsCursor;
+	
+	FETCH NEXT FROM @newsCursor INTO @NewsID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+	 INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowed (UserID, NewsID)
+		SELECT @UserID, @NewsID
+		EXCEPT
+		SELECT UserID, NewsID from {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	 
+		FETCH NEXT FROM @newsCursor INTO @NewsID;
+	END
+
+	CLOSE @newsCursor;
+	
+	DEALLOCATE @newsCursor;
+	
+	SET @newsCursor2 = CURSOR FOR
+	SELECT NewsID
+	FROM {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup f inner join {databaseOwner}{objectQualifier}CMI_NewsIndustry i
+	on f.MajorIndustryGroupID = i.MajorIndustryGroupID
+	inner join {databaseOwner}{objectQualifier}CMI_News c
+	on i.SICcode =c.SICcode
+	where UserID =@UserID;
+	
+	OPEN @newsCursor2;
+	
+	FETCH NEXT FROM @newsCursor2 INTO @NewsID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+	 INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowed (UserID, NewsID)
+		SELECT @UserID, @NewsID
+		EXCEPT
+		SELECT UserID, NewsID from {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	 
+		FETCH NEXT FROM @newsCursor2 INTO @NewsID;
+	END
+
+	CLOSE @newsCursor2;
+	
+	DEALLOCATE @newsCursor2;
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserFollowCompany]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserFollowCompany
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserFollowCompany
+	   @UserID int,
+	   @CIKCode bigInt
+as
+BEGIN
+	DECLARE @NewsID INT;
+	DECLARE @newsCursor as CURSOR;
+	
+	INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowCompany (UserID, CIKCode)
+		SELECT @UserID, @CIKCode
+		EXCEPT
+		SELECT UserID, CIKCode from {databaseOwner}{objectQualifier}CMI_NewsFollowCompany;
+
+	SET @newsCursor = CURSOR FOR
+	SELECT NewsID
+	FROM {databaseOwner}{objectQualifier}CMI_NewsFollowCompany f inner join {databaseOwner}{objectQualifier}CMI_News c
+	on f.CIKCode =c.CIKCode
+	where UserID =@UserID 
+	and f.CIKCode =@CIKCode;
+	
+	OPEN @newsCursor;
+	
+	FETCH NEXT FROM @newsCursor INTO @NewsID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+	 INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowed (UserID, NewsID)
+		SELECT @UserID, @NewsID
+		EXCEPT
+		SELECT UserID, NewsID from {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	 
+		FETCH NEXT FROM @newsCursor INTO @NewsID;
+	END
+
+	CLOSE @newsCursor;
+	
+	DEALLOCATE @newsCursor;
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserUnFollowCompany]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserUnFollowCompany
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserUnFollowCompany
+	   @UserID int,
+	   @CIKCode bigInt
+as
+BEGIN
+
+	Delete from {databaseOwner}{objectQualifier}CMI_NewsFollowCompany where UserID = @UserID and CIKCode= @CIKCode;
+	
+	Delete from {databaseOwner}{objectQualifier}CMI_NewsFollowed where UserID = @UserID and NewsID in 
+	(select NewsID from {databaseOwner}{objectQualifier}CMI_News where CIKCode =@CIKCode);
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserFollowMajorIndustryGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserFollowMajorIndustryGroup
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserFollowMajorIndustryGroup
+	   @UserID int,
+	   @MajorIndustryGroupID Int
+as
+BEGIN
+	DECLARE @NewsID INT;
+	DECLARE @newsCursor as CURSOR;
+	
+	INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup (UserID, MajorIndustryGroupID)
+		SELECT @UserID, @MajorIndustryGroupID
+		EXCEPT
+		SELECT UserID, MajorIndustryGroupID from {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup;
+
+	SET @newsCursor = CURSOR FOR
+	SELECT NewsID
+	FROM {databaseOwner}{objectQualifier}CMI_NewsIndustry i inner join {databaseOwner}{objectQualifier}CMI_News c
+	on i.SICCode =c.SICCode
+	where i.MajorIndustryGroupID =@MajorIndustryGroupID;
+	
+	OPEN @newsCursor;
+	
+	FETCH NEXT FROM @newsCursor INTO @NewsID;
+	
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	 
+	 INSERT INTO {databaseOwner}{objectQualifier}CMI_NewsFollowed (UserID, NewsID)
+		SELECT @UserID, @NewsID
+		EXCEPT
+		SELECT UserID, NewsID from {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	 
+		FETCH NEXT FROM @newsCursor INTO @NewsID;
+	END
+
+	CLOSE @newsCursor;
+	
+	DEALLOCATE @newsCursor;
+	
+END
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserUnFollowMajorIndustryGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserUnFollowMajorIndustryGroup
+GO
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserUnFollowMajorIndustryGroup
+	   @UserID int,
+	   @MajorIndustryGroupID bigInt
+as
+BEGIN
+
+	Delete from {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup where UserID = @UserID and MajorIndustryGroupID= @MajorIndustryGroupID;
+	
+	Delete from {databaseOwner}{objectQualifier}CMI_NewsFollowed where UserID = @UserID and NewsID in 
+	(select NewsID from {databaseOwner}{objectQualifier}CMI_News c 
+	inner join {databaseOwner}{objectQualifier}CMI_NewsIndustry i
+	on c.SICCode = i.SICCode and  i.MajorIndustryGroupID =@MajorIndustryGroupID);
+	
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserRead]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserRead
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserRead
+
+	@UserID				int,
+	@NewsID				int
+
+as
+BEGIN
+	update {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	set		Status		= 1
+	where  UserID = @UserID
+	and NewsID =@NewsID;
+
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserHide]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserHide
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserHide
+
+	@UserID				int,
+	@NewsID				int
+
+as
+BEGIN
+	update {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	set		Status		= -1
+	where  UserID = @UserID
+	and NewsID =@NewsID;
+
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_UserUnRead]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_UserUnRead
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_UserUnRead
+
+	@UserID				int,
+	@NewsID				int
+
+as
+BEGIN
+	update {databaseOwner}{objectQualifier}CMI_NewsFollowed
+	set		Status		= 0
+	where  UserID = @UserID
+	and NewsID =@NewsID;
+
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetFollowedCompany]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedCompany
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedCompany
+@UserID				int
+as
+BEGIN
+	select c.*
+	from {databaseOwner}{objectQualifier}CMI_NewsFollowCompany f inner join {databaseOwner}{objectQualifier}CMI_NewsCompany c
+	on f.CIKCode =c.CIKCode
+	where UserID =@UserID
+	order by CompanyName desc;
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetFollowedMajorIndustryGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedMajorIndustryGroup
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedMajorIndustryGroup
+@UserID				int
+as
+BEGIN
+	select c.*
+	from {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup f inner join {databaseOwner}{objectQualifier}CMI_NewsMajorIndustryGroup c
+	on f.MajorIndustryGroupID =c.MajorIndustryGroupID
+	where UserID =@UserID
+	order by MajorIndustryGroup desc;
+END
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetFollowedCompanyNews]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedCompanyNews
+GO
+
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedCompanyNews
+@UserID				int,
+@CIKCode 	bigInt,
+@Fillingtype  char(1)
+as
+BEGIN
+	select n.*, f.Status
+	from {databaseOwner}{objectQualifier}vwCMI_NewsAllTypes n inner join {databaseOwner}{objectQualifier}CMI_NewsFollowCompany c
+	on n.CIKCode = c.CIKCode
+	inner join {databaseOwner}{objectQualifier}CMI_NewsFollowed f on n.NewsID=f.NewsID
+	where c.UserID=@UserID and f.UserID=@UserID 
+	and n.CIKCode = @CIKCode
+	and Fillingtype = @Fillingtype and f.Status<>-1
+	order by FilingDate desc
+END
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_News_sGetFollowedMajorIndustryGroupNews]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedMajorIndustryGroupNews
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_News_sGetFollowedMajorIndustryGroupNews
+@UserID				int,
+@MajorIndustryGroupID 	bigInt,
+@Fillingtype  char(1)
+as
+BEGIN
+	select top 10 n.*, f.Status
+	from {databaseOwner}{objectQualifier}vwCMI_NewsAllTypes n inner join {databaseOwner}{objectQualifier}CMI_NewsFollowMajorIndustryGroup c
+	on n.MajorIndustryGroupID = c.MajorIndustryGroupID
+	inner join {databaseOwner}{objectQualifier}CMI_NewsFollowed f on n.NewsID=f.NewsID
+	where c.UserID=@UserID and f.UserID=@UserID
+	and n.MajorIndustryGroupID = @MajorIndustryGroupID
+	and Fillingtype = @Fillingtype and f.Status<>-1
+	order by FilingDate desc
+END
+GO
+
+
+if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}[{objectQualifier}CMI_NewsPreferenceCompany_sGet]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	drop procedure {databaseOwner}{objectQualifier}CMI_NewsPreferenceCompany_sGet
+GO
+
+create procedure {databaseOwner}{objectQualifier}CMI_NewsPreferenceCompany_sGet
+	   @UserID int
+as
+BEGIN
+select  c.CikCode
+from {databaseOwner}[{objectQualifier}CMI_NewsPreferenceCompany] f inner join {databaseOwner}[{objectQualifier}CMI_NewsCompany] c
+	on f.CIKCode =c.CIKCode
+	where UserID =@UserID
+	order by CompanyName desc;
+
+END
+GO
+
+
+
